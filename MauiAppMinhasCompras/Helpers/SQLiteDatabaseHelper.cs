@@ -37,7 +37,7 @@ namespace MauiAppMinhasCompras.Helpers
 
         public Task<List<Produto>> Search(string p)
         {
-            string sql = "SELECT * Produto Where descricao LIKE '%" + p + "%'";
+            string sql = "SELECT * FROM Produto Where descricao LIKE '%" + p + "%'";
             return _conn.QueryAsync<Produto>(sql);
         }
     }
