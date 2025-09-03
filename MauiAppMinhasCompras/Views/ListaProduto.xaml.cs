@@ -15,10 +15,13 @@ public partial class ListaProduto : ContentPage
 
     protected async override void OnAppearing()
     {
-        try { 
-        List<Produto> tmp = await App.Db.GetAll();
+        try
+        {
+            Lista.Clear();
 
-        tmp.ForEach(i => Lista.Add(i));
+            List<Produto> tmp = await App.Db.GetAll();
+
+            tmp.ForEach(i => Lista.Add(i));
         }
         catch (Exception ex)
         {
@@ -100,14 +103,15 @@ public partial class ListaProduto : ContentPage
 
     private void lst_produtos_ItemSelected(object sender, SelectedItemChangedEventArgs e)
     {
-        try { 
+        try
+        {
 
             Produto p = e.SelectedItem as Produto;
-            Navigation.PushAsync(new Views.EditarProduto { BindingContext = p} );
+            Navigation.PushAsync(new Views.EditarProduto { BindingContext = p });
         }
         catch (Exception ex)
         {
-             DisplayAlert("Erro", ex.Message, "Ok");
-}
+            DisplayAlert("Erro", ex.Message, "Ok");
+        }
     }
 }
