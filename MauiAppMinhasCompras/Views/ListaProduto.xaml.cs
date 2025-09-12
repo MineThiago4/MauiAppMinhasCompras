@@ -1,11 +1,42 @@
+using CommunityToolkit.Maui.Views;
 using MauiAppMinhasCompras.Models;
+using MauiAppMinhasCompras.Views.Popups;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace MauiAppMinhasCompras.Views;
 
-public partial class ListaProduto : ContentPage
+public partial class ListaProduto : ContentPage, INotifyPropertyChanged
 {
     ObservableCollection<Produto> Lista = new ObservableCollection<Produto>();
+
+    private bool _isFilteredByCategory;
+    public bool IsFilteredByCategory
+    {
+        get => _isFilteredByCategory;
+        set
+        {
+            if (_isFilteredByCategory != value)
+            {
+                _isFilteredByCategory = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+
+    private bool _isFilteredByDate;
+    public bool IsFilteredByDate
+    {
+        get => _isFilteredByDate;
+        set
+        {
+            if (_isFilteredByDate != value)
+            {
+                _isFilteredByDate = value;
+                OnPropertyChanged();
+            }
+        }
+    }
     public ListaProduto()
     {
         InitializeComponent();
@@ -69,9 +100,9 @@ public partial class ListaProduto : ContentPage
         }
     }
 
-    private void ToolbarItem_Clicked_1(object sender, EventArgs e)
+    private async void ToolbarItem_Clicked_1(object sender, EventArgs e)
     {
-        try
+        /*try
         {
             double soma = Lista.Sum(i => i.Total);
 
@@ -82,7 +113,10 @@ public partial class ListaProduto : ContentPage
         catch (Exception ex)
         {
             DisplayAlert("Erro", ex.Message, "Ok");
-        }
+        }*/
+
+        var popup = new SomarPopup(Lista); 
+        await this.ShowPopupAsync(popup);
     }
 
     private async void MenuItem_Clicked(object sender, EventArgs e)
@@ -139,5 +173,112 @@ public partial class ListaProduto : ContentPage
         {
             lst_produtos.IsRefreshing = false;
         }
+    }
+
+
+    private async void Filtro_Clicked(object sender, EventArgs e)
+    {
+        var popup = new FiltroPopup(Lista);
+        var resultado = await this.ShowPopupAsync(popup);
+
+        try
+        {
+            if (resultado is string filtro)
+            {
+                // Reseta as propriedades de visibilidade
+                IsFilteredByCategory = false;
+                IsFilteredByDate = false;
+
+                if (filtro.StartsWith("categoria:"))
+                {
+                    IsFilteredByCategory = true;
+                    // ... sua lógica de filtro de categoria
+                }
+                else if (filtro.Contains("|"))
+                {
+                    IsFilteredByDate = true;
+                    // ... sua lógica de filtro de data
+                }
+                else
+                {
+                    // Para outros filtros, você pode definir a visibilidade padrão
+                    IsFilteredByCategory = false;
+                    IsFilteredByDate = false;
+                }
+                // Declara a variável aqui para ser usada por todos os filtros
+                List<Produto> listaFiltrada = new List<Produto>();
+
+                // Usamos um switch para lidar com todos os filtros de forma unificada
+                switch (filtro)
+                {
+                    case string s when s.StartsWith("categoria:"):
+                        string categoriaFiltro = s.Substring("categoria:".Length);
+                        listaFiltrada = Lista.Where(p => p.Categoria != null && p.Categoria.ToLower().Contains(categoriaFiltro.ToLower())).ToList();
+                        break;
+
+                    case string s when s.Contains("|"):
+                        try
+                        {
+                            string[] datas = s.Split('|');
+
+                            DateTime dataInicio = DateTime.ParseExact(datas[0], "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+                            DateTime dataFim = DateTime.ParseExact(datas[1], "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+
+                            dataFim = dataFim.Date.AddDays(1).AddSeconds(-1);
+
+                            listaFiltrada = Lista.Where(p => p.DataCadastro.Date >= dataInicio.Date && p.DataCadastro.Date <= dataFim.Date).ToList();
+                        }
+                        catch (FormatException fe)
+                        {
+                            await DisplayAlert("Erro", $"O formato da data retornada pelo filtro está incorreto. Erro: {fe}", "Ok");
+                            listaFiltrada = Lista.ToList();
+                        }
+                        break;
+                    case "Ordem Alfabética (A-Z)":
+                        listaFiltrada = Lista.OrderBy(p => p.Descricao).ToList();
+                        break;
+                    case "Mais Recentes":
+                        listaFiltrada = Lista.OrderByDescending(p => p.DataCadastro).ToList();
+                        break;
+                    case "Menos Recentes":
+                        listaFiltrada = Lista.OrderBy(p => p.DataCadastro).ToList();
+                        break;
+                    case "Maior Valor":
+                        listaFiltrada = Lista.OrderByDescending(p => p.Preco).ToList();
+                        break;
+                    case "Menor Valor":
+                        listaFiltrada = Lista.OrderBy(p => p.Preco).ToList();
+                        break;
+                    case "Maior Valor Total":
+                        listaFiltrada = Lista.OrderByDescending(p => p.Total).ToList();
+                        break;
+                    case "Menor Valor Total":
+                        listaFiltrada = Lista.OrderBy(p => p.Total).ToList();
+                        break;
+                    case "Maior Quantidade":
+                        listaFiltrada = Lista.OrderByDescending(p => p.Quantidade).ToList();
+                        break;
+                    case "Menor Quantidade":
+                        listaFiltrada = Lista.OrderBy(p => p.Quantidade).ToList();
+                        break;
+                    default:
+                        listaFiltrada = Lista.ToList();
+                        break;
+                }
+
+
+                Lista.Clear();
+                foreach (var item in listaFiltrada)
+                {
+                    Lista.Add(item);
+                }
+            }
+
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Erro", ex.Message, "Ok");
+        }
+
     }
 }

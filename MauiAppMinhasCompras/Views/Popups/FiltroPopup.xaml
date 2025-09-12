@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="MauiAppMinhasCompras.Views.Popups.FiltroPopup"
+             CanBeDismissedByTappingOutsideOfPopup="True">
+
+    <toolkit:Popup.Resources>
+        <Style x:Key="PopupButton" TargetType="Button">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontAttributes" Value="Bold" />
+            <Setter Property="BackgroundColor" Value="#673AB7" />
+            <Setter Property="TextColor" Value="White" />
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="Padding" Value="10" />
+            <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+        </Style>
+
+        <Style x:Key="PopupButton2" TargetType="Button">
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="FontAttributes" Value="Bold" />
+            <Setter Property="BackgroundColor" Value="#673AB7" />
+            <Setter Property="TextColor" Value="White" />
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="Padding" Value="10" />
+            <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+        </Style>
+    </toolkit:Popup.Resources>
+
+    <Grid BackgroundColor="White" WidthRequest="300" 
+          HorizontalOptions="EndAndExpand" VerticalOptions="FillAndExpand" 
+          RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto" RowSpacing="10" Padding="10">
+
+        <Label Grid.Row="0" Text="Ordenar e Filtrar" FontSize="Large" FontAttributes="Bold" HorizontalOptions="Center" />
+
+
+        <Button Grid.Row="1" Text="Ordem Alfabética (A-Z)" Clicked="OnFiltroSelecionado" Style="{StaticResource PopupButton}"/>
+                <StackLayout Grid.Row="2" Orientation="Horizontal" HorizontalOptions="Center" Spacing="5">
+            <Button Text="Mais Recentes" Clicked="OnFiltroSelecionado" WidthRequest="120" Style="{StaticResource PopupButton2}"/>
+            <Button Text="Menos Recentes" Clicked="OnFiltroSelecionado" WidthRequest="120" Style="{StaticResource PopupButton2}"/>
+                </StackLayout>
+                <StackLayout Grid.Row="3" Orientation="Horizontal" HorizontalOptions="Center" Spacing="5">
+            <Button Text="Maior Valor Total" Clicked="OnFiltroSelecionado" WidthRequest="120" Style="{StaticResource PopupButton2}"/>
+            <Button Text="Menor Valor Total" Clicked="OnFiltroSelecionado" WidthRequest="120" Style="{StaticResource PopupButton2}"/>
+                </StackLayout>
+                <StackLayout Grid.Row="4" Orientation="Horizontal" HorizontalOptions="Center" Spacing="5">
+            <Button Text="Maior Valor" Clicked="OnFiltroSelecionado" WidthRequest="120" Style="{StaticResource PopupButton2}"/>
+            <Button Text="Menor Valor" Clicked="OnFiltroSelecionado" WidthRequest="120" Style="{StaticResource PopupButton2}"/>
+                </StackLayout>
+                <StackLayout Grid.Row="5" Orientation="Horizontal" HorizontalOptions="Center" Spacing="5">
+            <Button Text="Maior Quantidade" Clicked="OnFiltroSelecionado" WidthRequest="120" Style="{StaticResource PopupButton2}"/>
+            <Button Text="Menor Quantidade" Clicked="OnFiltroSelecionado" WidthRequest="120" Style="{StaticResource PopupButton2}"/>
+                </StackLayout>
+
+
+        <Frame Grid.Row="6">
+            <StackLayout Spacing="5">
+                <Picker x:Name="pickerCategoria" Title="Selecione uma Categoria" HorizontalOptions="FillAndExpand" />
+                <Button Text="Filtrar por Categoria" Clicked="OnFiltrarCategoriaClicked" WidthRequest="250" HorizontalOptions="Center" Style="{StaticResource PopupButton}"/>
+            </StackLayout>
+        </Frame>
+        <Frame Grid.Row="7">
+            <StackLayout Spacing="5">
+                <Label Text="Começo:" />
+                <DatePicker x:Name="dtp_data_comeco" Format="dd/MM/yyyy" />
+                <Label Text="Fim:" />
+                <DatePicker x:Name="dtp_data_fim" Format="dd/MM/yyyy" />
+                <Button Text="Filtrar Por Data" Clicked="OnFiltroData" WidthRequest="250" HorizontalOptions="Center" Style="{StaticResource PopupButton}"/>
+            </StackLayout>
+        </Frame>
+        <Button Grid.Row="8" Text="Fechar" Clicked="OnFecharClicked" WidthRequest="250" HorizontalOptions="Center" Style="{StaticResource PopupButton}"/>
+    </Grid>
+</toolkit:Popup>

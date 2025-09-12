@@ -11,8 +11,14 @@
         <Label Text="Descrição do Produto:"/>
         <Entry x:Name="txt_descricao" Text="{Binding Descricao}"/>
 
+        <Label Text="Categoria do Produto:"/>
+        <Entry x:Name="txt_categoria" Text="{Binding Categoria}"/>
+
         <Label Text="Quantidade:"/>
         <Entry x:Name="txt_quantidade" Text="{Binding Quantidade}" Keyboard="Numeric"/>
+
+        <Label Text="Data da Compra:"/>
+        <DatePicker x:Name="dtp_dt_compra" Date="{Binding DataCadastro}" />
 
         <Label Text="Preço Unitário:"/>
         <Entry x:Name="txt_preco" Text="{Binding Preco}" Keyboard="Numeric"/>
