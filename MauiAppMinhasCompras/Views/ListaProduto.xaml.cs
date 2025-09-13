@@ -189,22 +189,7 @@ public partial class ListaProduto : ContentPage, INotifyPropertyChanged
                 IsFilteredByCategory = false;
                 IsFilteredByDate = false;
 
-                if (filtro.StartsWith("categoria:"))
-                {
-                    IsFilteredByCategory = true;
-                    // ... sua lógica de filtro de categoria
-                }
-                else if (filtro.Contains("|"))
-                {
-                    IsFilteredByDate = true;
-                    // ... sua lógica de filtro de data
-                }
-                else
-                {
-                    // Para outros filtros, você pode definir a visibilidade padrão
-                    IsFilteredByCategory = false;
-                    IsFilteredByDate = false;
-                }
+                
                 // Declara a variável aqui para ser usada por todos os filtros
                 List<Produto> listaFiltrada = new List<Produto>();
 
@@ -214,6 +199,7 @@ public partial class ListaProduto : ContentPage, INotifyPropertyChanged
                     case string s when s.StartsWith("categoria:"):
                         string categoriaFiltro = s.Substring("categoria:".Length);
                         listaFiltrada = Lista.Where(p => p.Categoria != null && p.Categoria.ToLower().Contains(categoriaFiltro.ToLower())).ToList();
+                        IsFilteredByCategory = true;
                         break;
 
                     case string s when s.Contains("|"):
@@ -227,6 +213,7 @@ public partial class ListaProduto : ContentPage, INotifyPropertyChanged
                             dataFim = dataFim.Date.AddDays(1).AddSeconds(-1);
 
                             listaFiltrada = Lista.Where(p => p.DataCadastro.Date >= dataInicio.Date && p.DataCadastro.Date <= dataFim.Date).ToList();
+                            IsFilteredByDate = true;
                         }
                         catch (FormatException fe)
                         {

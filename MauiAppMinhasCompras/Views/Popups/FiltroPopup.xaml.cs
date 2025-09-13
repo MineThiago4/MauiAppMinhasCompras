@@ -34,7 +34,7 @@ public partial class FiltroPopup : Popup
         string filtroEscolhido = botao.Text;
 
         // Fecha o popup e retorna o valor do filtro escolhido
-        Close($"Filtros:{filtroEscolhido}");
+        Close(filtroEscolhido);
     }
 
    private void OnFiltrarCategoriaClicked(object sender, EventArgs e)
